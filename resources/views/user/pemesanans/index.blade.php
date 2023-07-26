@@ -1,9 +1,9 @@
-@extends('layouts.teknisi')
+@extends('layouts.user')
 @section('content')
 @can('pemesanan_create')
     <div style="margin-bottom: 10px;" class="row">
         <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route('teknisi.pemesanans.create') }}">
+            <a class="btn btn-success" href="{{ route('user.pemesanans.create') }}">
                 {{ trans('global.add') }} {{ trans('cruds.pemesanan.title_singular') }}
             </a>
         </div>
@@ -88,27 +88,20 @@
                                 {{ App\Models\Pemesanan::STATUS_SELECT[$pemesanan->status] ?? '' }}
                             </td>
                             <td>
-                                <form action="{{ route('teknisi.pemesanans.verif', $pemesanan->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                    @method('PATCH')
-                                    <input type="hidden" name="status" value="Sudah Ambil">
-                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                    <input type="submit" class="btn btn-xs btn-success" value="Terima">
-                                </form>
-
                                 @can('pemesanan_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('teknisi.pemesanans.show', $pemesanan->id) }}">
+                                    <a class="btn btn-xs btn-primary" href="{{ route('user.pemesanans.show', $pemesanan->id) }}">
                                         {{ trans('global.view') }}
                                     </a>
                                 @endcan
 
                                 @can('pemesanan_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('teknisi.pemesanans.edit', $pemesanan->id) }}">
+                                    <a class="btn btn-xs btn-info" href="{{ route('user.pemesanans.edit', $pemesanan->id) }}">
                                         {{ trans('global.edit') }}
                                     </a>
                                 @endcan
 
                                 @can('pemesanan_delete')
-                                    <form action="{{ route('teknisi.pemesanans.destroy', $pemesanan->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                    <form action="{{ route('user.pemesanans.destroy', $pemesanan->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
@@ -133,35 +126,6 @@
 <script>
     $(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('pemesanan_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
-  let deleteButton = {
-    text: deleteButtonTrans,
-    url: "{{ route('teknisi.pemesanans.massDestroy') }}",
-    className: 'btn-danger',
-    action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
-          return $(entry).data('entry-id')
-      });
-
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
-        return
-      }
-
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
-    }
-  }
-  dtButtons.push(deleteButton)
-@endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
     orderCellsTop: true,

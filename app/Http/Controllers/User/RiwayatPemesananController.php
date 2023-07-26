@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Teknisi;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyRiwayatPemesananRequest;
@@ -19,9 +19,13 @@ class RiwayatPemesananController extends Controller
     {
         abort_if(Gate::denies('riwayat_pemesanan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $riwayatPemesanans = RiwayatPemesanan::with(['pemesanan', 'teknisi'])->get();
+        $riwayatPemesanans = RiwayatPemesanan::with(['pemesanan.user', 'teknisi'])
+            ->whereHas('pemesanan', function ($query) {
+                $query->where('user_id', auth()->id());
+            })
+            ->get();
 
-        return view('teknisi.riwayatPemesanans.index', compact('riwayatPemesanans'));
+        return view('user.riwayatPemesanans.index', compact('riwayatPemesanans'));
     }
 
     public function create()
@@ -32,14 +36,14 @@ class RiwayatPemesananController extends Controller
 
         $teknisis = Teknisi::pluck('nama', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('teknisi.riwayatPemesanans.create', compact('pemesanans', 'teknisis'));
+        return view('user.riwayatPemesanans.create', compact('pemesanans', 'teknisis'));
     }
 
     public function store(StoreRiwayatPemesananRequest $request)
     {
         $riwayatPemesanan = RiwayatPemesanan::create($request->all());
 
-        return redirect()->route('teknisi.riwayat-pemesanans.index');
+        return redirect()->route('user.riwayat-pemesanans.index');
     }
 
     public function edit(RiwayatPemesanan $riwayatPemesanan)
@@ -52,23 +56,14 @@ class RiwayatPemesananController extends Controller
 
         $riwayatPemesanan->load('pemesanan', 'teknisi');
 
-        return view('teknisi.riwayatPemesanans.edit', compact('pemesanans', 'riwayatPemesanan', 'teknisis'));
-    }
-
-    public function updatestatus(Request $request, RiwayatPemesanan $riwayatPemesanan)
-    {
-        $riwayatPemesanan->status = $request->input('status');
-
-        $riwayatPemesanan->save();
-
-        return redirect()->route('teknisi.riwayat-pemesanans.index');
+        return view('user.riwayatPemesanans.edit', compact('pemesanans', 'riwayatPemesanan', 'teknisis'));
     }
 
     public function update(UpdateRiwayatPemesananRequest $request, RiwayatPemesanan $riwayatPemesanan)
     {
         $riwayatPemesanan->update($request->all());
 
-        return redirect()->route('teknisi.riwayat-pemesanans.index');
+        return redirect()->route('user.riwayat-pemesanans.index');
     }
 
     public function show(RiwayatPemesanan $riwayatPemesanan)
@@ -77,7 +72,7 @@ class RiwayatPemesananController extends Controller
 
         $riwayatPemesanan->load('pemesanan', 'teknisi');
 
-        return view('teknisi.riwayatPemesanans.show', compact('riwayatPemesanan'));
+        return view('user.riwayatPemesanans.show', compact('riwayatPemesanan'));
     }
 
     public function destroy(RiwayatPemesanan $riwayatPemesanan)

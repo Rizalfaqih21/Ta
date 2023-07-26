@@ -9,8 +9,8 @@ use App\Http\Requests\UpdatePemesananRequest;
 use App\Models\Layanan;
 use App\Models\Pemesanan;
 use App\Models\User;
-use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class PemesananController extends Controller
@@ -40,6 +40,15 @@ class PemesananController extends Controller
         $pemesanan = Pemesanan::create($request->all());
 
         return redirect()->route('admin.pemesanans.index');
+    }
+    
+    public function verif(Request $request, Pemesanan $pemesanan)
+    {
+        $pemesanan->status = $request->input('status');
+
+        $pemesanan->save();
+
+        return back()->with('message', 'Berhasil diambil Pemenesanan!');
     }
 
     public function edit(Pemesanan $pemesanan)

@@ -1,6 +1,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4" style="min-height: 917px;">
     <!-- Brand Logo -->
     <a href="#" class="brand-link">
+        <img src="{{asset('goser.png')}}" alt="logo brand" class="brand-image img-circle elevation-3">
         <span class="brand-text font-weight-light">{{ trans('panel.site_title') }}</span>
     </a>
 
@@ -122,7 +123,7 @@
                 @if(file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php')))
                     @can('profile_password_edit')
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->is('profile/password') || request()->is('profile/password/*') ? 'active' : '' }}" href="{{ route('profile.password.edit') }}">
+                            <a class="nav-link {{ request()->is('teknisi/profile/password') || request()->is('teknisi/profile/password/*') ? 'active' : '' }}" href="{{ route('teknisi.profile.index') }}">
                                 <i class="fa-fw fas fa-key nav-icon">
                                 </i>
                                 <p>

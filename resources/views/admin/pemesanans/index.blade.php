@@ -88,13 +88,12 @@
                                 {{ App\Models\Pemesanan::STATUS_SELECT[$pemesanan->status] ?? '' }}
                             </td>
                             <td>
-                                <a class="btn btn-xs btn-success" href="{{ route('admin.pemesanans.show', $pemesanan->id) }}">
-                                    Terima
-                                </a>
-                                
-                                <a class="btn btn-xs btn-warning" href="{{ route('admin.pemesanans.show', $pemesanan->id) }}">
-                                    Tolak
-                                </a>
+                                <form action="{{ route('admin.pemesanans.verif', $pemesanan->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="Sudah Ambil">
+                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    <input type="submit" class="btn btn-xs btn-success" value="Terima">
+                                </form>
 
                                 @can('pemesanan_show')
                                     <a class="btn btn-xs btn-primary" href="{{ route('admin.pemesanans.show', $pemesanan->id) }}">

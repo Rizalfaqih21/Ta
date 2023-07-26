@@ -33,14 +33,6 @@ class RegisterController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
-    protected function registered(Request $request, $user)
-    {
-        if (request()->input('roles') === 3) {
-            return redirect('/teknisi'); // Mengarahkan teknisi ke halaman /teknisi
-        } else {
-            return redirect('/'); // Mengarahkan pengguna biasa ke halaman utama (/)
-        }
-    }
     /**
      * Create a new controller instance.
      *
@@ -84,6 +76,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
         $user->roles()->sync(request()->input('roles'));
-        return $user;
+        
+        return view('auth.login');
     }
 }

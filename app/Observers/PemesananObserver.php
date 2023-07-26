@@ -37,7 +37,7 @@ class PemesananObserver
             $teknisi_id = $teknisi->id;
             if($pemesanan->isDirty('status')){
                 RiwayatPemesanan::create([
-                    'pemesana_id' => $pemesanan->id,
+                    'pemesanan_id' => $pemesanan->id,
                     'teknisi_id' => $teknisi_id,
                     'status' => 'on process'
                 ]);

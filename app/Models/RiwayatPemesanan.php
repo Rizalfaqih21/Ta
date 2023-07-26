@@ -6,11 +6,12 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use \Znck\Eloquent\Traits\BelongsToThrough;
 
 class RiwayatPemesanan extends Model
 {
     use SoftDeletes, HasFactory;
-
+    
     public $table = 'riwayat_pemesanans';
 
     protected $dates = [
@@ -47,5 +48,10 @@ class RiwayatPemesanan extends Model
     public function teknisi()
     {
         return $this->belongsTo(Teknisi::class, 'teknisi_id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToThrough(User::class, Pemesanan::class);
     }
 }

@@ -8,8 +8,8 @@ use App\Http\Requests\StoreTeknisiRequest;
 use App\Http\Requests\UpdateTeknisiRequest;
 use App\Models\Teknisi;
 use App\Models\User;
-use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class TeknisiController extends Controller
@@ -18,71 +18,23 @@ class TeknisiController extends Controller
     {
         abort_if(Gate::denies('teknisi_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $teknisis = Teknisi::with(['user'])->get();
+        $teknisi = Teknisi::with(['user'])->first();
 
-        return view('teknisi.teknisis.index', compact('teknisis'));
+        return view('teknisi.teknisis.index', compact('teknisi'));
     }
 
-    public function create()
-    {
-        abort_if(Gate::denies('teknisi_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        return view('teknisi.teknisis.create', compact('users'));
-    }
 
     public function store(StoreTeknisiRequest $request)
     {
-        $teknisi = Teknisi::create($request->all());
+        Teknisi::updateOrCreate([
+            'user_id'   => auth()->id(),
+        ], [
+            'nama'     => $request->get('nama'),
+            'no' => $request->get('no'),
+            'alamat'   => $request->get('alamat'),
+            'keahlian'   => $request->get('keahlian'),
+        ]);
 
-        return redirect()->route('teknisi.teknisis.index');
-    }
-
-    public function edit(Teknisi $teknisi)
-    {
-        abort_if(Gate::denies('teknisi_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $teknisi->load('user');
-
-        return view('teknisi.teknisis.edit', compact('teknisi', 'users'));
-    }
-
-    public function update(UpdateTeknisiRequest $request, Teknisi $teknisi)
-    {
-        $teknisi->update($request->all());
-
-        return redirect()->route('teknisi.teknisis.index');
-    }
-
-    public function show(Teknisi $teknisi)
-    {
-        abort_if(Gate::denies('teknisi_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $teknisi->load('user');
-
-        return view('teknisi.teknisis.show', compact('teknisi'));
-    }
-
-    public function destroy(Teknisi $teknisi)
-    {
-        abort_if(Gate::denies('teknisi_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $teknisi->delete();
-
-        return back();
-    }
-
-    public function massDestroy(MassDestroyTeknisiRequest $request)
-    {
-        $teknisis = Teknisi::find(request('ids'));
-
-        foreach ($teknisis as $teknisi) {
-            $teknisi->delete();
-        }
-
-        return response(null, Response::HTTP_NO_CONTENT);
+        return redirect()->route('teknisi.teknisis.index')->with('message', 'Berhasil Mengupdate data.');
     }
 }

@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyPemesananRequest;
 use App\Http\Requests\StorePemesananRequest;
 use App\Http\Requests\UpdatePemesananRequest;
+use App\Mail\PemesananMail;
 use App\Models\Layanan;
 use App\Models\Pemesanan;
 use App\Models\Teknisi;
 use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 
 class PemesananController extends Controller
@@ -46,14 +48,21 @@ class PemesananController extends Controller
 
         return redirect()->route('teknisi.pemesanans.index');
     }
-    
+
     public function verif(Request $request, Pemesanan $pemesanan)
     {
         $pemesanan->status = $request->input('status');
-
+        
         $pemesanan->save();
 
-        return back()->with('message', 'Berhasil diambil Pemenesanan!');
+        $teknisi = Teknisi::where('user_id', auth()->id())->first();
+        
+        if ($request->input('status') === 'Sudah Ambil') {
+            $data = $teknisi->nama;
+            Mail::to($pemesanan->user->email)->send(new PemesananMail($data));
+        }
+
+        return back()->with('message', 'Pesanan diambil!');
     }
 
     public function edit(Pemesanan $pemesanan)

@@ -46,19 +46,22 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $no = 1;
+                    @endphp
                     @foreach($riwayatPemesanans as $key => $riwayatPemesanan)
                         <tr data-entry-id="{{ $riwayatPemesanan->id }}">
                             <td>
 
                             </td>
                             <td>
-                                {{ $riwayatPemesanan->id ?? '' }}
+                                {{ $no++ }}
                             </td>
                             <td>
                                 {{ $riwayatPemesanan->pemesanan->nama ?? '' }}
                             </td>
                             <td>
-                                {{ $riwayatPemesanan->teknisi->nama ?? '' }}
+                                {{ $riwayatPemesanan->teknisi->nama ?? 'Belum ada yang Ambil Pesanan' }}
                             </td>
                             <td>
                                 {{ App\Models\RiwayatPemesanan::STATUS_SELECT[$riwayatPemesanan->status] ?? '' }}

@@ -25,10 +25,10 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.pemesanan.fields.user') }}
+                            Email Pemesan
                         </th>
                         <td>
-                            {{ $pemesanan->user->name ?? '' }}
+                            {{ $pemesanan->user->email ?? '' }}
                         </td>
                     </tr>
                     <tr>

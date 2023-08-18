@@ -19,7 +19,12 @@ class RiwayatPemesananController extends Controller
     {
         abort_if(Gate::denies('riwayat_pemesanan_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $riwayatPemesanans = RiwayatPemesanan::with(['pemesanan', 'teknisi'])->get();
+        $teknisi = Teknisi::where('user_id', auth()->id())->first();
+        if ($teknisi === null) {
+            return redirect()->back();
+        }
+        $id = $teknisi->id;
+        $riwayatPemesanans = RiwayatPemesanan::with(['pemesanan', 'teknisi'])->where('teknisi_id', $id)->get();
 
         return view('teknisi.riwayatPemesanans.index', compact('riwayatPemesanans'));
     }

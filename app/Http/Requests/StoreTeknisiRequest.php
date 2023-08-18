@@ -27,11 +27,7 @@ class StoreTeknisiRequest extends FormRequest
             ],
             'alamat' => [
                 'required',
-            ],
-            'keahlian' => [
-                'string',
-                'required',
-            ],
+            ]
         ];
     }
 }

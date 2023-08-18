@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyTeknisiRequest;
 use App\Http\Requests\StoreTeknisiRequest;
 use App\Http\Requests\UpdateTeknisiRequest;
+use App\Models\Layanan;
 use App\Models\Teknisi;
 use App\Models\User;
 use Gate;
@@ -18,7 +19,7 @@ class TeknisiController extends Controller
     {
         abort_if(Gate::denies('teknisi_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $teknisis = Teknisi::with(['user'])->get();
+        $teknisis = Teknisi::with(['user', 'layanan'])->get();
 
         return view('admin.teknisis.index', compact('teknisis'));
     }
@@ -28,8 +29,9 @@ class TeknisiController extends Controller
         abort_if(Gate::denies('teknisi_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $layanans = Layanan::pluck('layanan', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.teknisis.create', compact('users'));
+        return view('admin.teknisis.create', compact('users', 'layanans'));
     }
 
     public function store(StoreTeknisiRequest $request)
@@ -44,10 +46,11 @@ class TeknisiController extends Controller
         abort_if(Gate::denies('teknisi_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $users = User::pluck('email', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $layanans = Layanan::pluck('layanan', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $teknisi->load('user');
 
-        return view('admin.teknisis.edit', compact('teknisi', 'users'));
+        return view('admin.teknisis.edit', compact('teknisi', 'users', 'layanans'));
     }
 
     public function update(UpdateTeknisiRequest $request, Teknisi $teknisi)

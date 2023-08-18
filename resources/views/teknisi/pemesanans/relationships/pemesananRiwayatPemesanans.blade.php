@@ -25,7 +25,7 @@
                                 {{ trans('cruds.riwayatPemesanan.fields.id') }}
                             </th>
                             <th>
-                                {{ trans('cruds.riwayatPemesanan.fields.pemesanan') }}
+                                Nama Pemesan
                             </th>
                             <th>
                                 {{ trans('cruds.riwayatPemesanan.fields.teknisi') }}

@@ -48,7 +48,7 @@
                 @if(file_exists(app_path('Http/Controllers/Auth/ChangePasswordController.php')))
                     @can('profile_password_edit')
                         <li class="nav-item">
-                            <a class="nav-link {{ request()->is('profile/password') || request()->is('profile/password/*') ? 'active' : '' }}" href="{{ route('profile.password.edit') }}">
+                            <a class="nav-link {{ request()->is('user/profile/password') || request()->is('user/profile/password/*') ? 'active' : '' }}" href="{{ route('user.profile.index') }}">
                                 <i class="fa-fw fas fa-key nav-icon">
                                 </i>
                                 <p>

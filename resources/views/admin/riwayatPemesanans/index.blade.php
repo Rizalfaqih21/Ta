@@ -46,19 +46,22 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                      $no = 1;
+                  @endphp
                     @foreach($riwayatPemesanans as $key => $riwayatPemesanan)
                         <tr data-entry-id="{{ $riwayatPemesanan->id }}">
                             <td>
 
                             </td>
                             <td>
-                                {{ $riwayatPemesanan->id ?? '' }}
+                                {{ $no++ }}
                             </td>
                             <td>
                                 {{ $riwayatPemesanan->pemesanan->nama ?? '' }}
                             </td>
                             <td>
-                                {{ $riwayatPemesanan->teknisi->nama ?? '' }}
+                                {{ $riwayatPemesanan->teknisi->nama ?? 'Belum ada yang Ambil Pesanan' }}
                             </td>
                             <td>
                                 {{ App\Models\RiwayatPemesanan::STATUS_SELECT[$riwayatPemesanan->status] ?? '' }}
@@ -108,35 +111,7 @@
 <script>
     $(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('riwayat_pemesanan_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
-  let deleteButton = {
-    text: deleteButtonTrans,
-    url: "{{ route('admin.riwayat-pemesanans.massDestroy') }}",
-    className: 'btn-danger',
-    action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
-          return $(entry).data('entry-id')
-      });
 
-      if (ids.length === 0) {
-        alert('{{ trans('global.datatables.zero_selected') }}')
-
-        return
-      }
-
-      if (confirm('{{ trans('global.areYouSure') }}')) {
-        $.ajax({
-          headers: {'x-csrf-token': _token},
-          method: 'POST',
-          url: config.url,
-          data: { ids: ids, _method: 'DELETE' }})
-          .done(function () { location.reload() })
-      }
-    }
-  }
-  dtButtons.push(deleteButton)
-@endcan
 
   $.extend(true, $.fn.dataTable.defaults, {
     orderCellsTop: true,

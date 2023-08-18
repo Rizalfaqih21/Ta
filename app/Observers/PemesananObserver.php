@@ -35,9 +35,11 @@ class PemesananObserver
         if (auth()->user()->is_teknisi) {
             $teknisi = Teknisi::where('user_id', auth()->id())->first();
             $teknisi_id = $teknisi->id;
+            $id = $pemesanan->id;
+            $riwayat = RiwayatPemesanan::where('pemesanan_id', $id)->first();
             if($pemesanan->isDirty('status')){
-                RiwayatPemesanan::create([
-                    'pemesanan_id' => $pemesanan->id,
+                $riwayat->update([
+                    'pemesanan_id' => $id,
                     'teknisi_id' => $teknisi_id,
                     'status' => 'on process'
                 ]);

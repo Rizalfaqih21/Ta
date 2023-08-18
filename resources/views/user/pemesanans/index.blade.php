@@ -26,7 +26,7 @@
                             {{ trans('cruds.pemesanan.fields.id') }}
                         </th>
                         <th>
-                            {{ trans('cruds.pemesanan.fields.user') }}
+                           Email 
                         </th>
                         <th>
                             {{ trans('cruds.pemesanan.fields.layanan') }}
@@ -55,13 +55,16 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php
+                        $no = 1;
+                    @endphp
                     @foreach($pemesanans as $key => $pemesanan)
                         <tr data-entry-id="{{ $pemesanan->id }}">
                             <td>
 
                             </td>
                             <td>
-                                {{ $pemesanan->id ?? '' }}
+                                {{ $no++ }}
                             </td>
                             <td>
                                 {{ $pemesanan->user->email ?? '' }}

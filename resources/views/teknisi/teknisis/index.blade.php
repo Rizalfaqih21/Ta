@@ -36,13 +36,16 @@
                         <span class="help-block">{{ trans('cruds.teknisi.fields.alamat_helper') }}</span>
                     </div>
                     <div class="form-group">
-                        <label class="required" for="keahlian">{{ trans('cruds.teknisi.fields.keahlian') }}</label>
-                        <input class="form-control {{ $errors->has('keahlian') ? 'is-invalid' : '' }}" type="text"
-                            name="keahlian" id="keahlian" value="{{ old('keahlian', '') }}" required>
-                        @if ($errors->has('keahlian'))
-                            <span class="text-danger">{{ $errors->first('keahlian') }}</span>
+                        <label class="required" for="layanan_id">Keahlian</label>
+                        <select class="form-control select2 {{ $errors->has('layanan') ? 'is-invalid' : '' }}" name="layanan_id" id="layanan_id" required>
+                            @foreach($layanans as $id => $entry)
+                                <option value="{{ $id }}" {{ (old('layanan_id') ? old('layanan_id') : $teknisi->layanan->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                            @endforeach
+                        </select>
+                        @if($errors->has('layanan'))
+                            <span class="text-danger">{{ $errors->first('layanan') }}</span>
                         @endif
-                        <span class="help-block">{{ trans('cruds.teknisi.fields.keahlian_helper') }}</span>
+                        <span class="help-block">{{ trans('cruds.pemesanan.fields.layanan_helper') }}</span>
                     </div>
                 @else
                     <div class="form-group">
@@ -72,13 +75,16 @@
                         <span class="help-block">{{ trans('cruds.teknisi.fields.alamat_helper') }}</span>
                     </div>
                     <div class="form-group">
-                        <label class="required" for="keahlian">{{ trans('cruds.teknisi.fields.keahlian') }}</label>
-                        <input class="form-control {{ $errors->has('keahlian') ? 'is-invalid' : '' }}" type="text"
-                            name="keahlian" id="keahlian" value="{{ old('keahlian', $teknisi->keahlian) }}" required>
-                        @if ($errors->has('keahlian'))
-                            <span class="text-danger">{{ $errors->first('keahlian') }}</span>
+                        <label class="required" for="layanan_id">Keahlian</label>
+                        <select class="form-control select2 {{ $errors->has('layanan') ? 'is-invalid' : '' }}" name="layanan_id" id="layanan_id" required>
+                            @foreach($layanans as $id => $entry)
+                                <option value="{{ $id }}" {{ (old('layanan_id') ? old('layanan_id') : $teknisi->layanan->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                            @endforeach
+                        </select>
+                        @if($errors->has('layanan'))
+                            <span class="text-danger">{{ $errors->first('layanan') }}</span>
                         @endif
-                        <span class="help-block">{{ trans('cruds.teknisi.fields.keahlian_helper') }}</span>
+                        <span class="help-block">{{ trans('cruds.pemesanan.fields.layanan_helper') }}</span>
                     </div>
                 @endif
 

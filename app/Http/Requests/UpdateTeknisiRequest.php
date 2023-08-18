@@ -27,11 +27,7 @@ class UpdateTeknisiRequest extends FormRequest
             ],
             'alamat' => [
                 'required',
-            ],
-            'keahlian' => [
-                'string',
-                'required',
-            ],
+            ]
         ];
     }
 }

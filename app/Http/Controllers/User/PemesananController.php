@@ -6,11 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyPemesananRequest;
 use App\Http\Requests\StorePemesananRequest;
 use App\Http\Requests\UpdatePemesananRequest;
+use App\Mail\PemberitahuanMail;
 use App\Models\Layanan;
 use App\Models\Pemesanan;
+use App\Models\Teknisi;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 
 class PemesananController extends Controller
@@ -38,7 +41,11 @@ class PemesananController extends Controller
         $attr = $request->all();
         $attr['user_id'] = auth()->id();
         $attr['status'] = 'Order Masuk';
+        $teknisi = User::whereHas('teknisi')->pluck('email');
         $pemesanan = Pemesanan::create($attr);
+        foreach ($teknisi as $email) {
+            Mail::to($email)->send(new PemberitahuanMail());
+        }
 
         return redirect()->route('user.pemesanans.index');
     }
@@ -56,7 +63,7 @@ class PemesananController extends Controller
 
     public function update(UpdatePemesananRequest $request, Pemesanan $pemesanan)
     {
-        
+
         $attr = $request->all();
         $attr['user_id'] = auth()->id();
         $pemesanan->update($attr);

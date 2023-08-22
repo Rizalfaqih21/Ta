@@ -25,6 +25,7 @@ class Teknisi extends Model
         'nama',
         'no',
         'alamat',
+        'gambar',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -33,6 +34,19 @@ class Teknisi extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+    
+    public function getImage()
+    {
+        if (substr($this->gambar, 0, 5) == "https") {
+            return $this->gambar;
+        }
+
+        if ($this->gambar) {
+            return asset('/uploads/imgCover/' . $this->gambar);
+        }
+
+        return 'https://via.placeholder.com/500x500.png?text=No+Cover';
     }
 
     public function user()

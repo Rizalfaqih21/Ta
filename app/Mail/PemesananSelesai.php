@@ -9,11 +9,10 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class PemesananMail extends Mailable
+class PemesananSelesai extends Mailable
 {
     use Queueable, SerializesModels;
-
-    public $nama, $gambar;
+    public $nama, $barang, $layanan;
     /**
      * Create a new message instance.
      *
@@ -22,7 +21,8 @@ class PemesananMail extends Mailable
     public function __construct($data)
     {
         $this->nama = $data['nama'];
-        $this->gambar = $data['gambar'];
+        $this->barang = $data['barang'];
+        $this->layanan = $data['layanan'];
     }
 
     /**
@@ -33,7 +33,7 @@ class PemesananMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Pemesanan Diterima',
+            subject: 'Pemesanan Selesai',
         );
     }
 
@@ -45,7 +45,7 @@ class PemesananMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'invoice.pemesananInvoice',
+            view: 'invoice.pemesananselesai',
         );
     }
 

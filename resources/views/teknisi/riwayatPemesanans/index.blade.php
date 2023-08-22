@@ -73,6 +73,18 @@
                                     {{ $riwayatPemesanan->updated_at ?? '' }}
                                 </td>
                                 <td>
+                                    @if ($riwayatPemesanan->status !== 'Selesai')
+                                        <form
+                                            action="{{ route('teknisi.riwayat-pemesanans.selesai', $riwayatPemesanan->id) }}"
+                                            method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');"
+                                            style="display: inline-block;">
+                                            @method('PATCH')
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <input type="hidden" name="status" value="Selesai">
+                                            <input type="submit" class="btn btn-xs btn-success" value="Selesai">
+                                        </form>
+                                    @else
+                                    @endif
                                     @can('riwayat_pemesanan_show')
                                         <a class="btn btn-xs btn-primary"
                                             href="{{ route('teknisi.riwayat-pemesanans.show', $riwayatPemesanan->id) }}">

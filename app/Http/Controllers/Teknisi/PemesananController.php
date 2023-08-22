@@ -54,11 +54,14 @@ class PemesananController extends Controller
         $pemesanan->status = $request->input('status');
         
         $pemesanan->save();
-
+        
         $teknisi = Teknisi::where('user_id', auth()->id())->first();
         
         if ($request->input('status') === 'Sudah Ambil') {
-            $data = $teknisi->nama;
+            $data = [
+                'nama' => $teknisi->nama,
+                'gambar' => $teknisi->getImage()
+            ];
             Mail::to($pemesanan->user->email)->send(new PemesananMail($data));
         }
 
@@ -100,7 +103,7 @@ class PemesananController extends Controller
 
         $pemesanan->delete();
 
-        return back();
+        return back()->with('message', 'Berhasil Dihapus');
     }
 
     public function massDestroy(MassDestroyPemesananRequest $request)

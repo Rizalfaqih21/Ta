@@ -50,8 +50,8 @@
                 </div>
                 <div class="form-group">
                     <label for="layanan_id">Keahlian</label>
-                    <select class="form-control select2 {{ $errors->has('layanan') ? 'is-invalid' : '' }}" name="layanan_id"
-                        id="layanan_id">
+                    <select class="form-control select2 {{ $errors->has('layanan') ? 'is-invalid' : '' }}"
+                        name="layanan_id" id="layanan_id">
                         @foreach ($layanans as $id => $entry)
                             <option value="{{ $id }}" {{ old('layanan_id') == $id ? 'selected' : '' }}>
                                 {{ $entry }}</option>
@@ -61,11 +61,44 @@
                         <span class="text-danger">{{ $errors->first('layanan') }}</span>
                     @endif
                 </div>
+                <div class="form-group">
+                    <label for="image">Foto Profil</label>
+                    <img id="previewImage" class="mb-2" src="#" width="100%" alt="">
+                    <div class="custom-file">
+                        <input type="file" name="image" class="custom-file-input" id="customFile">
+                        <label class="custom-file-label {{ $errors->has('image') ? 'is-invalid' : '' }}"
+                            for="customFile">Pilih Gambar</label>
+                    </div>
+                    @if ($errors->has('image'))
+                        <span class="text-danger">{{ $errors->first('image') }}</span>
+                    @endif
+                </div>
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>
+            </form>
         </div>
-        </form>
     </div>
-    </div>
+@endsection
+@section('scripts')
+    <script>
+        // fungsi ini akan berjalan ketika akan menambahkan gambar dimana fungsi ini
+        // akan membuat preview image sebelum kita simpan gambar tersebut.      
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#previewImage').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Ketika tag input file denghan class image di klik akan menjalankan fungsi di atas
+        $("#image").change(function() {
+            readURL(this);
+        });
+    </script>
 @endsection

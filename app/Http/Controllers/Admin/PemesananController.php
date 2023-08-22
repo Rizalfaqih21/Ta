@@ -86,7 +86,7 @@ class PemesananController extends Controller
 
         $pemesanan->delete();
 
-        return back();
+        return back()->with('message', 'Berhasil Dihapus');
     }
 
     public function massDestroy(MassDestroyPemesananRequest $request)

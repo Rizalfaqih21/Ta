@@ -11,6 +11,7 @@ use App\Models\Teknisi;
 use App\Models\User;
 use Gate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpFoundation\Response;
 
 class TeknisiController extends Controller
@@ -36,7 +37,19 @@ class TeknisiController extends Controller
 
     public function store(StoreTeknisiRequest $request)
     {
-        $teknisi = Teknisi::create($request->all());
+        $this->validate($request, [
+            'image' => 'image|mimes:png,jpg,jpeg',
+        ]);
+        $attr = $request->all();
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $uploadFile = time() . '_' . $file->getClientOriginalName();
+            $file->move('uploads/imgCover/', $uploadFile);
+            $attr['image'] = $uploadFile;
+        }
+
+        $teknisi = Teknisi::create($attr);
 
         return redirect()->route('admin.teknisis.index');
     }
@@ -55,7 +68,25 @@ class TeknisiController extends Controller
 
     public function update(UpdateTeknisiRequest $request, Teknisi $teknisi)
     {
-        $teknisi->update($request->all());
+        $this->validate($request, [
+            'image' => 'image|mimes:png,jpg,jpeg',
+        ]);
+
+        $attr = $request->all();
+        if ($request->hasFile('image')) {
+            
+            if (File::exists("uploads/imgCover/" . $teknisi->image)) {
+                File::delete("uploads/imgCover/" . $teknisi->image);
+            }
+            
+            $file = $request->file("image");
+            //$uploadFile = StoreImage::replace($teknisi->image,$file->getRealPath(),$file->getClientOriginalName());
+            $uploadFile = time() . '_' . $file->getClientOriginalName();
+            $file->move('uploads/imgCover/', $uploadFile);
+            $teknisi->image = $uploadFile;
+        }
+
+        $teknisi->update($attr);
 
         return redirect()->route('admin.teknisis.index');
     }
@@ -75,7 +106,7 @@ class TeknisiController extends Controller
 
         $teknisi->delete();
 
-        return back();
+        return back()->with('message', 'Berhasil Dihapus');
     }
 
     public function massDestroy(MassDestroyTeknisiRequest $request)

@@ -12,15 +12,16 @@ use Illuminate\Queue\SerializesModels;
 class PemberitahuanMail extends Mailable
 {
     use Queueable, SerializesModels;
-
+    public $barang, $layanan;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($data)
     {
-
+        $this->barang = $data['barang'];
+        $this->layanan = $data['layanan'];
     }
 
     /**

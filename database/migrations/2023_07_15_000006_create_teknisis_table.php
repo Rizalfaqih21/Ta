@@ -13,6 +13,7 @@ class CreateTeknisisTable extends Migration
             $table->string('nama');
             $table->string('no');
             $table->longText('alamat');
+            $table->string('gambar')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

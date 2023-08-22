@@ -42,9 +42,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Teknisi
     Route::delete('teknisis/destroy', 'TeknisiController@massDestroy')->name('teknisis.massDestroy');
     Route::resource('teknisis', 'TeknisiController');
+
     // Riwayat Pemesanan
-    
     Route::delete('riwayat-pemesanans/destroy', 'RiwayatPemesananController@massDestroy')->name('riwayat-pemesanans.massDestroy');
+    Route::patch('riwayat-pemesanans/selesai/{riwayat_pemesanan}', 'RiwayatPemesananController@status')->name('riwayat-pemesanans.selesai');
     Route::resource('riwayat-pemesanans', 'RiwayatPemesananController');
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
@@ -69,6 +70,7 @@ Route::group(['prefix' => 'teknisi', 'as' => 'teknisi.', 'namespace' => 'Teknisi
     
     // Riwayat Pemesanan
     Route::delete('riwayat-pemesanans/destroy', 'RiwayatPemesananController@massDestroy')->name('riwayat-pemesanans.massDestroy');
+    Route::patch('riwayat-pemesanans/selesai/{riwayat_pemesanan}', 'RiwayatPemesananController@status')->name('riwayat-pemesanans.selesai');
     Route::patch('riwayat-pemesanans/updatee/{riwayat_pemesanan}', 'RiwayatPemesananController@updatestatus')->name('riwayat-pemesanans.updatestatus');
     Route::resource('riwayat-pemesanans', 'RiwayatPemesananController');
     

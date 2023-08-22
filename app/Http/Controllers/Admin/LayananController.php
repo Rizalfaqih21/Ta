@@ -33,7 +33,7 @@ class LayananController extends Controller
     {
         $layanan = Layanan::create($request->all());
 
-        return redirect()->route('admin.layanans.index');
+        return redirect()->route('admin.layanans.index')->with('message', 'Berhasil Disimpan');
     }
 
     public function edit(Layanan $layanan)
@@ -47,7 +47,7 @@ class LayananController extends Controller
     {
         $layanan->update($request->all());
 
-        return redirect()->route('admin.layanans.index');
+        return redirect()->route('admin.layanans.index')->with('message', 'Berhasil Diubah');
     }
 
     public function show(Layanan $layanan)
@@ -63,7 +63,7 @@ class LayananController extends Controller
 
         $layanan->delete();
 
-        return back();
+        return back()->with('message', 'Berhasil Dihapus');
     }
 
     public function massDestroy(MassDestroyLayananRequest $request)

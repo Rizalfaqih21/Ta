@@ -23,6 +23,16 @@ class RiwayatPemesananController extends Controller
 
         return view('admin.riwayatPemesanans.index', compact('riwayatPemesanans'));
     }
+    
+
+    public function status(RiwayatPemesanan $riwayatPemesanan)
+    {
+        $riwayatPemesanan->status = request('status');
+
+        $riwayatPemesanan->save();
+
+        return back;
+    }
 
     public function create()
     {
@@ -77,17 +87,7 @@ class RiwayatPemesananController extends Controller
 
         $riwayatPemesanan->delete();
 
-        return back();
+        return back()->with('message', 'Berhasil Dihapus');
     }
 
-    public function massDestroy(MassDestroyRiwayatPemesananRequest $request)
-    {
-        $riwayatPemesanans = RiwayatPemesanan::find(request('ids'));
-
-        foreach ($riwayatPemesanans as $riwayatPemesanan) {
-            $riwayatPemesanan->delete();
-        }
-
-        return response(null, Response::HTTP_NO_CONTENT);
-    }
 }

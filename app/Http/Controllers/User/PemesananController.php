@@ -44,7 +44,12 @@ class PemesananController extends Controller
         $teknisi = User::whereHas('teknisi')->pluck('email');
         $pemesanan = Pemesanan::create($attr);
         foreach ($teknisi as $email) {
-            Mail::to($email)->send(new PemberitahuanMail());
+            $layanan = Layanan::find($attr['layanan_id']);
+            $data = [
+                'layanan' => $layanan->layanan,
+                'barang' => $attr['nama_barang'],
+            ];
+            Mail::to($email)->send(new PemberitahuanMail($data));
         }
 
         return redirect()->route('user.pemesanans.index');
@@ -86,7 +91,7 @@ class PemesananController extends Controller
 
         $pemesanan->delete();
 
-        return back();
+        return back()->with('error', 'Berhasil Dibatalkan');
     }
 
     public function massDestroy(MassDestroyPemesananRequest $request)

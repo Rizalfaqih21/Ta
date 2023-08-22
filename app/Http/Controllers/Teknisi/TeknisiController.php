@@ -28,6 +28,17 @@ class TeknisiController extends Controller
 
     public function store(StoreTeknisiRequest $request)
     {
+        $this->validate($request, [
+            'image' => 'image|mimes:png,jpg,jpeg',
+        ]);
+        $attr = $request->all();
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $uploadFile = time() . '_' . $file->getClientOriginalName();
+            $file->move('uploads/imgCover/', $uploadFile);
+            $attr['image'] = $uploadFile;
+        }
         $teknisi = Teknisi::updateOrCreate([
             'user_id'   => auth()->id(),
         ], [
@@ -35,6 +46,7 @@ class TeknisiController extends Controller
             'no' => $request->get('no'),
             'alamat'   => $request->get('alamat'),
             'layanan_id'   => $request->get('layanan_id'),
+            'gambar'   => $attr['image'],
         ]);
 
         

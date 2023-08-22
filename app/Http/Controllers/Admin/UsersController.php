@@ -72,7 +72,7 @@ class UsersController extends Controller
 
         $user->delete();
 
-        return back()->with('message', 'Berhasil menghapus user!');;
+        return back()->with('message', 'Berhasil menghapus user!');
     }
 
     public function massDestroy(MassDestroyUserRequest $request)

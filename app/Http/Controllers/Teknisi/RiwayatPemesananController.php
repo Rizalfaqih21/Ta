@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\MassDestroyRiwayatPemesananRequest;
 use App\Http\Requests\StoreRiwayatPemesananRequest;
 use App\Http\Requests\UpdateRiwayatPemesananRequest;
+use App\Mail\PemesananSelesai;
 use App\Models\Pemesanan;
 use App\Models\RiwayatPemesanan;
 use App\Models\Teknisi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 
 class RiwayatPemesananController extends Controller
@@ -27,6 +29,23 @@ class RiwayatPemesananController extends Controller
         $riwayatPemesanans = RiwayatPemesanan::with(['pemesanan', 'teknisi'])->where('teknisi_id', $id)->get();
 
         return view('teknisi.riwayatPemesanans.index', compact('riwayatPemesanans'));
+    }
+    
+    public function status(RiwayatPemesanan $riwayatPemesanan)
+    {
+        $riwayatPemesanan->status = request('status');
+
+        $riwayatPemesanan->save();
+
+        if (request('status') === 'Selesai') {
+            $data = [
+                'nama' => $riwayatPemesanan->pemesanan->nama,
+                'layanan' => $riwayatPemesanan->pemesanan->layanan->layanan,
+                'barang' => $riwayatPemesanan->pemesanan->nama_barang,
+            ];
+            Mail::to($riwayatPemesanan->pemesanan->user->email)->send(new PemesananSelesai($data));
+        }
+        return back();
     }
 
     public function create()
@@ -66,7 +85,7 @@ class RiwayatPemesananController extends Controller
 
         $riwayatPemesanan->save();
 
-        return redirect()->route('teknisi.riwayat-pemesanans.index');
+        return redirect()->route('teknisi.riwayat-pemesanans.index')->with('message', 'Berhasil Diupdate');
     }
 
     public function update(UpdateRiwayatPemesananRequest $request, RiwayatPemesanan $riwayatPemesanan)

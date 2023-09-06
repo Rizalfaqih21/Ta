@@ -38,6 +38,12 @@ class TeknisiController extends Controller
             $uploadFile = time() . '_' . $file->getClientOriginalName();
             $file->move('uploads/imgCover/', $uploadFile);
             $attr['image'] = $uploadFile;
+        } else {
+            // Jika tidak ada file gambar yang diunggah, gunakan gambar yang ada dalam database.
+            $existingTeknisi = Teknisi::where('user_id', auth()->id())->first();
+            if ($existingTeknisi) {
+                $attr['image'] = $existingTeknisi->gambar;
+            }
         }
         $teknisi = Teknisi::updateOrCreate([
             'user_id'   => auth()->id(),
